@@ -3,34 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Selfie</title>
+    <title>Login with just a glance!🚀</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .upload-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        button {
+            background-color: #ba035e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #9e3e4e;
+        }
+
+        p {
+            margin-top: 10px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <h2>Upload Your Selfie</h2>
-    <input type="file" id="fileInput">
-    <button onclick="uploadFile()">Upload</button>
-    <p id="response"></p>
 
-    <script>
-        function uploadFile() {
-            let fileInput = document.getElementById("fileInput");
-            let file = fileInput.files[0];
-            let formData = new FormData();
-            formData.append("file", file);
+    <div class="upload-container">
+        <h3>Unlock your world with a look!
+            👁️👁️</h3>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()"> Upload</button>
+        <p id="response"></p>
+    </div>
 
-            fetch("/upload", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("response").innerText = data.success || data.error;
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                document.getElementById("response").innerText = "Upload failed!";
-            });
-        }
-    </script>
 </body>
 </html>
