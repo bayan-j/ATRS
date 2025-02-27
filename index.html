@@ -64,9 +64,12 @@
     <div class="upload-container">
         <h3>Unlock your world with a look!
             👁️👁️</h3>
-        <input type="file" id="fileInput">
-        <button onclick="uploadFile()"> Upload</button>
-        <p id="response"></p>
+
+
+            <form action="/login" method="POST" enctype="multipart/form-data">
+                <input type="file" name="image" accept="image/*">
+                <button type="submit">Login</button>
+            </form>
     </div>
 
 </body>
