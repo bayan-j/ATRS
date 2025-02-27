@@ -33,7 +33,7 @@ cv2.destroyAllWindows()
 # Load the saved image
 image = face_recognition.load_image_file("captured_faces/user_face.jpg")
 # Get face encodings
-face_encodings = face_recognition.face_encodings(image)
+face_encodings = face_recognition.face_encodings(image)[0]
 
 if face_encodings:
     np.save("captured_faces/user_face.npy", face_encodings)

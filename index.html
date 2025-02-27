@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login with just a glance!🚀</title>
+    <title>Face Verification</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,21 +23,17 @@
             margin-bottom: 20px;
         }
 
-        .upload-container {
-            background: white;
-            padding: 20px;
+        #videoElement {
+            border: 5px solid #ba035e;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
+            margin-bottom: 20px;
         }
 
-        input[type="file"] {
-            margin: 10px 0;
-            padding: 10px;
-            width: 100%;
+        canvas {
+            display: none;
         }
 
-        button {
+        .button {
             background-color: #520681;
             color: white;
             border: none;
@@ -46,31 +42,92 @@
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
+            margin-top: 20px;
         }
 
-        button:hover {
+        .button:hover {
             background-color: #743696;
         }
 
         p {
-            margin-top: 10px;
-            color: green;
+            margin-top: 20px;
             font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
         }
     </style>
 </head>
 <body>
 
-    <div class="upload-container">
-        <h3>Unlock your world with a look!
-            👁️👁️</h3>
+    <h2>Login with just a glance!🚀</h2>
+    
+    <!-- Video element for capturing live feed -->
+    <video id="videoElement" width="640" height="480" autoplay></video>
+    
+    <canvas id="canvas"></canvas>
+    
+    <!-- Capture Button -->
+    <button class="button" id="captureButton">Capture Image for Verification</button>
 
+    <p id="response"></p>
 
-            <form action="/login" method="POST" enctype="multipart/form-data">
-                <input type="file" name="image" accept="image/*">
-                <button type="submit">Login</button>
-            </form>
-    </div>
+    <script>
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const captureButton = document.getElementById('captureButton');
+        const responseElement = document.getElementById('response');
+
+        // Set up video stream
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+            .catch(function(err) {
+                console.log("Error: " + err);
+            });
+
+        captureButton.addEventListener('click', () => {
+            // Set canvas size to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            // Draw current video frame to canvas
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // Convert canvas to image and send to the server (base64 format)
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Send base64 image data to Flask backend for verification
+            fetch('/verify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image_data: imageData
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Verification Successful") {
+                    responseElement.textContent = "Verification Successful! Welcome " + data.user;
+                    responseElement.classList.add('success');
+                    responseElement.classList.remove('error');
+                } else {
+                    responseElement.textContent = "Verification Failed. Please try again.";
+                    responseElement.classList.add('error');
+                    responseElement.classList.remove('success');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 
 </body>
 </html>
